@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AddItemModal } from './AddItemModal';
 
 export function Header(props) {
     const { last_fetched, last_fetch_ok } = props
@@ -14,7 +15,10 @@ export function Header(props) {
 
     return (
         <nav class="navbar navbar-dark bg-dark">
-            <a class="navbar-brand">Vidclipper</a>
+            <div>
+                <a class="navbar-brand">Vidclipper</a>
+                <AddItemModal style={{ display: 'inline-block' }} buttonLabel="+" />
+            </div>
             <span style={{ color: last_fetched_color }}>{last_fetched_string}</span>
         </nav>
     )
