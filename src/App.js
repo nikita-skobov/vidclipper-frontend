@@ -50,7 +50,7 @@ function App() {
                 setTimeout(() => {
                     console.log('done interval. do thing again')
                     dothing()
-                }, 10000)
+                }, 2000)
             })
         }
         dothing()
