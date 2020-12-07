@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { ProgressItem, get_progress_percent } from './ProgressItem'
+import { ProgressItem, get_progress_state } from './ProgressItem'
 
 async function get_progress_list() {
     try {
@@ -46,9 +46,16 @@ export function ProgressList() {
     // to do that we need to calculate the progresses for each data:
     for (let i = 0; i < data.length; i += 1) {
         const stages = data[i].stages
-        const progress = get_progress_percent(stages)
+        const [progress, is_errored] = get_progress_state(stages)
         data[i].progress = progress
+        data[i].is_errored = is_errored
     }
+    // first sort alphabetically
+    // this avoids things at 100% from constantly moving around
+    data.sort((a, b) => {
+        return a.key > b.key ? -1 : 1
+    })
+    // then sort by progress
     data.sort((a, b) => {
         return a.progress > b.progress ? -1 : 1
     })
