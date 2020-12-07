@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { ProgressItem } from './ProgressItem'
+import { ProgressItem, get_progress_percent } from './ProgressItem'
 
 async function get_progress_list() {
     try {
@@ -41,6 +41,17 @@ export function ProgressList() {
         }
         dothing()
     }, [])
+
+    // sort the progress map so the highest progress comes first
+    // to do that we need to calculate the progresses for each data:
+    for (let i = 0; i < data.length; i += 1) {
+        const stages = data[i].stages
+        const progress = get_progress_percent(stages)
+        data[i].progress = progress
+    }
+    data.sort((a, b) => {
+        return a.progress > b.progress ? -1 : 1
+    })
 
     return data.map(d => <ProgressItem data={d} />)
 }
