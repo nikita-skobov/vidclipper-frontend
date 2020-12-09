@@ -25,13 +25,11 @@ async function get_progress_list() {
 }
 
 function App() {
-    const [all_data, setData] = useState({
-        data: [],
+    const [stage_data, set_stage_data] = useState([]);
+    const [meta_data, set_meta_data] = useState({
         last_fetched: null,
         last_fetch_ok: true,
-    });
-    console.log(`list wrapper has data: ${all_data}`)
-    console.log(all_data)
+    })
     useEffect(() => {
         const dothing = () => {
             get_progress_list().then(({ data, success }) => {
@@ -39,14 +37,22 @@ function App() {
                 console.log(data)
                 console.log(success)
 
-                // TODO: dont set data to empty
-                // if there was an error. would be nice to see the
-                // old list stay on screen
-                setData({
-                    data: data,
-                    last_fetched: new Date(),
-                    last_fetch_ok: success,
-                })
+                if (success) {
+                    set_stage_data(data)
+                    set_meta_data({
+                        last_fetched: new Date(),
+                        last_fetch_ok: success,
+                    })
+                } else {
+                    // if failed to get data, only
+                    // set the meta data to report a failure
+                    // but dont override the previous existing
+                    // stage data
+                    set_meta_data({
+                        last_fetched: new Date(),
+                        last_fetch_ok: success,
+                    })
+                }
                 setTimeout(() => {
                     console.log('done interval. do thing again')
                     dothing()
@@ -61,10 +67,10 @@ function App() {
     // the last fetched time, but all_data.data
     // is the main data that we want to display
     const {
-        data,
         last_fetched,
         last_fetch_ok,
-    } = all_data
+    } = meta_data
+    const data = stage_data
     // sort the progress map so the highest progress comes first
     // to do that we need to calculate the progresses for each data:
     for (let i = 0; i < data.length; i += 1) {
