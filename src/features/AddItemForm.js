@@ -29,12 +29,14 @@ export class AddItemForm extends React.Component {
                 start_input,
                 duration_input,
                 name_input,
+                extension_input,
             ] = elements
 
             const url = url_input.value
             const name = name_input.value
             const start = start_input.value
             const duration = duration_input.value
+            const extension = extension_input.value
 
             const start_num = Number.parseInt(start)
             const duration_num = Number.parseInt(duration)
@@ -48,6 +50,9 @@ export class AddItemForm extends React.Component {
             }
             if (!Number.isNaN(duration_num)) {
                 submit_json.duration = duration_num
+            }
+            if (extension) {
+                submit_json.transcode_extension = extension
             }
             add_progress_item(submit_json)
                 .then(resp => {
@@ -81,6 +86,11 @@ export class AddItemForm extends React.Component {
                     <label for="dl_name">Name</label>
                     <input type="text" class="form-control" id="dl_name" />
                     <small id="dl_name_help" class="form-text text-muted">Optional. leave blank if you want the name to be decided from the content itself.</small>
+                </div>
+                <div class="form-group">
+                    <label for="dl_ext">Extension</label> {/* TODO: make this a dropdown... */}
+                    <input type="text" class="form-control" id="dl_ext" />
+                    <small id="dl_ext_help" class="form-text text-muted">Optional. leave blank if you want the extension to be the same as the source.</small>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
