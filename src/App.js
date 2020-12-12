@@ -3,6 +3,7 @@ import logo from './logo.svg'
 import axios from 'axios'
 import { ProgressList } from './features/ProgressList'
 import { Header } from './features/Header'
+import { VideoList } from './features/VideoList'
 import { get_progress_state } from './features/ProgressItem'
 
 async function get_progress_list() {
@@ -24,14 +25,25 @@ async function get_progress_list() {
     }
 }
 
+async function get_source_videos() {
+    try {
+        const result = await axios.get('http://localhost:4000/videos')
+        console.log(result)
+        return { data: result.data, success: true }
+    } catch {
+        return { data: [], success: false }
+    }
+}
+
 function App() {
-    const [stage_data, set_stage_data] = useState([]);
+    const [source_video_data, set_source_video_data] = useState([])
+    const [stage_data, set_stage_data] = useState([])
     const [meta_data, set_meta_data] = useState({
         last_fetched: null,
         last_fetch_ok: true,
     })
     useEffect(() => {
-        const dothing = () => {
+        const progress_list_task = () => {
             get_progress_list().then(({ data, success }) => {
                 console.log('got progress list:')
                 console.log(data)
@@ -54,12 +66,27 @@ function App() {
                     })
                 }
                 setTimeout(() => {
-                    console.log('done interval. do thing again')
-                    dothing()
+                    console.log('done interval. do progress_list_task again')
+                    progress_list_task()
                 }, 2000)
             })
         }
-        dothing()
+
+        const source_video_task = () => {
+            get_source_videos().then(({ data, success }) => {
+                console.log('got source videos!')
+                if (success) {
+                    set_source_video_data(data)
+                }
+
+                setTimeout(() => {
+                    console.log('done interval. do source_video_task again')
+                    source_video_task()
+                }, 10000) // 10 seconds
+            })
+        }
+        source_video_task()
+        progress_list_task()
     }, [])
 
 
@@ -93,6 +120,7 @@ function App() {
         <div className="App">
             <Header last_fetched={last_fetched} last_fetch_ok={last_fetch_ok} />
             <ProgressList data={data} />
+            <VideoList data={source_video_data} />
         </div>
     )
 }
