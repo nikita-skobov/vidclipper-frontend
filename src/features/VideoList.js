@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col } from 'reactstrap'
 import { VideoItem } from './VideoItem'
+import { VideoModal } from './VideoModal'
 
 export function VideoList(props) {
     const { data } = props
@@ -10,7 +11,7 @@ export function VideoList(props) {
             <Row xs="3">
                 {data.map(d => (
                     <Col>
-                        <VideoItem data={d} />
+                        <VideoModal className="videomodal" data={d} />
                     </Col>
                 ))}
             </Row>
