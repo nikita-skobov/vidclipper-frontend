@@ -15,6 +15,8 @@ async function add_progress_item(json) {
 export class AddItemForm extends React.Component {
     constructor(props) {
         super(props)
+        this.defaultUrl = props.defaultUrl || ''
+        this.getStartTimeCallback = props.getStartTimeCallback
         this.form = React.createRef()
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -66,15 +68,19 @@ export class AddItemForm extends React.Component {
     }
 
     render() {
+        let start_time = ''
+        if (this.getStartTimeCallback) {
+            start_time = this.getStartTimeCallback()
+        }
         return (
             <form ref={this.form} onSubmit={this.handleSubmit}>
                 <div class="form-group">
                     <label for="dl_url">URL</label>
-                    <input type="text" class="form-control" id="dl_url" />
+                    <input type="text" class="form-control" id="dl_url" defaultValue={this.defaultUrl} />
                 </div>
                 <div class="form-group">
                     <label for="dl_start">Start position(in seconds)</label>
-                    <input type="number" class="form-control" id="dl_start" />
+                    <input type="number" class="form-control" id="dl_start" defaultValue={start_time} />
                     <small id="dl_start_help" class="form-text text-muted">Optional. leave blank if you want your clip to start at the beginning.</small>
                 </div>
                 <div class="form-group">

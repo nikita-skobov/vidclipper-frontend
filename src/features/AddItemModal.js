@@ -13,6 +13,8 @@ export function AddItemModal(props) {
         buttonLabel = '',
         className = '',
         style = {},
+        defaultUrl,
+        getStartTimeCallback,
     } = props
 
     const [modal, setModal] = useState(false)
@@ -25,7 +27,7 @@ export function AddItemModal(props) {
             <Modal isOpen={modal} toggle={toggle} className={className}>
             <ModalHeader toggle={toggle}>Add Item</ModalHeader>
             <ModalBody>
-                <AddItemForm />
+                <AddItemForm getStartTimeCallback={getStartTimeCallback} defaultUrl={defaultUrl} />
             </ModalBody>
             </Modal>
         </div>
